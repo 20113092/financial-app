@@ -1,16 +1,49 @@
 package ie.setu
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
 
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
+fun main() {
+    runMenu()
+}
+
+fun mainMenu(): Int {
+    while (true) {
+    print("""
+          ----------------------------------
+          |        Financial App           |
+          ----------------------------------
+          | NOTE MENU                      |
+          |   1) Add your Income           |
+          |   2) Add your Expenses         |
+          |   3) List your Incomes Above   |
+          |   4) Report                    |  
+          |   5) Exit                      |  
+          ----------------------------------
+         >""".trimMargin(">"))
+        return readlnOrNull()?.toIntOrNull() ?: -1
     }
 }
+        fun runMenu() {
+            do {
+                val option = mainMenu()
+                when (option) {
+                    1 -> addIncome()
+                    2 -> addExpenses()
+                    3 -> addIncome()
+                    4 -> addExpenses()
+                    5 -> exit()
+                    else -> println("Invalid option, Chose again")
+                }
+            } while (true)
+        }
+
+
+fun addIncome() {}
+
+fun addExpenses() {}
+
+fun listIncome() {}
+
+fun report() {}
+
+fun exit() {}
+
