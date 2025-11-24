@@ -1,5 +1,9 @@
 package ie.setu
 
+import ie.setu.models.*
+import ie.setu.utils.*
+import java.time.LocalDate
+
 
 fun main() {
     runMenu()
@@ -28,8 +32,8 @@ fun mainMenu(): Int {
                 when (option) {
                     1 -> addIncome()
                     2 -> addExpenses()
-                    3 -> addIncome()
-                    4 -> addExpenses()
+                    3 -> listIncome()
+                    4 -> report()
                     5 -> exit()
                     else -> println("Invalid option, Chose again")
                 }
@@ -37,7 +41,25 @@ fun mainMenu(): Int {
         }
 
 
-fun addIncome() {}
+fun addIncome() {
+    print("Description: ");
+    val description = readln()
+
+    print("Category: ");
+    val category = readln()
+
+    print("Date (DD-MM-YYYY): ");
+    val date = LocalDate.parse(readln())
+
+    print("Amount: ");
+    val amount = readln().toDouble()
+
+    print("Transferred: (True/False): ");
+    val transferred = readln().toBoolean()
+
+    addIncome(Income(description, category, date, amount, transferred))
+    println("Income complete.")
+}
 
 fun addExpenses() {}
 
