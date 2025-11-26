@@ -31,7 +31,7 @@ fun mainMenu(): Int {
                 val option = mainMenu()
                 when (option) {
                     1 -> addIncome()
-                    2 -> addExpenses()
+                    2 -> addExpense()
                     3 -> listIncome()
                     4 -> report()
                     5 -> exit()
@@ -62,7 +62,30 @@ fun addIncome() {
     println("Income complete.")
 }
 
-fun addExpenses() {}
+fun addExpense() {
+    print("Description: ");
+    val description = readln()
+
+    print("Category: ");
+    val category = readln()
+
+    print("Recipient: ");
+    val recipient = readln()
+
+    print("Date (DD-MM-YYYY): ");
+    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    val date = LocalDate.parse(readln(), formatter)
+
+    print("Amount: ");
+    val amount = readln().toDouble()
+
+    print("Transferred: (True/False): ");
+    val transferred = readln().toBoolean()
+
+    addExpense(Expense(description, category, recipient, date, amount, transferred))
+    println("Expense Added.")
+}
+
 
 fun listIncome() {}
 
