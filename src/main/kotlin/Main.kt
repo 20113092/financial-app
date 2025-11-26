@@ -3,7 +3,7 @@ package ie.setu
 import ie.setu.models.*
 import ie.setu.utils.*
 import java.time.LocalDate
-
+import java.time.format.DateTimeFormatter
 
 fun main() {
     runMenu()
@@ -49,7 +49,8 @@ fun addIncome() {
     val category = readln()
 
     print("Date (DD-MM-YYYY): ");
-    val date = LocalDate.parse(readln())
+    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    val date = LocalDate.parse(readln(), formatter)
 
     print("Amount: ");
     val amount = readln().toDouble()
