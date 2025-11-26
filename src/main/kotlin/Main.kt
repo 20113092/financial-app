@@ -18,7 +18,7 @@ fun mainMenu(): Int {
           | NOTE MENU                      |
           |   1) Add your Income           |
           |   2) Add your Expenses         |
-          |   3) List your Incomes Above   |
+          |   3) List All Incomes          |
           |   4) Report                    |  
           |   5) Exit                      |  
           ----------------------------------
@@ -32,7 +32,7 @@ fun mainMenu(): Int {
                 when (option) {
                     1 -> addIncome()
                     2 -> addExpense()
-                    3 -> listIncome()
+                    3 -> listAllIncomes()
                     4 -> report()
                     5 -> exit()
                     else -> println("Invalid option, Chose again")
@@ -87,7 +87,18 @@ fun addExpense() {
 }
 
 
-fun listIncome() {}
+fun listAllIncomes() {
+    if (incomes.isEmpty()) {
+        println("No Incomes on Record.")
+    } else {
+
+        println("----------------------------------")
+        println("|   All Your Recorded Incomes.   |")
+        println("----------------------------------")
+
+        incomes.forEach { println(it) }
+    }
+}
 
 fun report() {}
 
