@@ -4,6 +4,7 @@ import ie.setu.models.*
 import ie.setu.utils.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.system.exitProcess
 
 fun main() {
     runMenu()
@@ -13,14 +14,14 @@ fun mainMenu(): Int {
     while (true) {
     print("""
           ----------------------------------
-          |        Financial App           |
+          |         Financial App          |
           ----------------------------------
           | NOTE MENU                      |
           |   1) Add your Income           |
           |   2) Add your Expenses         |
           |   3) List All Incomes          |
           |   4) List All Expenses         |
-          |   5) Report                    |  
+          |   5) Get A Financial Report    |  
           |   6) Exit                      |  
           ----------------------------------
          >""".trimMargin(">"))
@@ -35,7 +36,7 @@ fun mainMenu(): Int {
                     2 -> addExpense()
                     3 -> listIncomes()
                     4 -> listExpenses()
-                    5-> report()
+                    5 -> report()
                     6 -> exit()
                     else -> println("Invalid option, Chose again")
                 }
@@ -115,7 +116,29 @@ fun listExpenses() {
     }
 }
 
-fun report() {}
+fun report() {
+    val totalIncome = incomes.sumOf { it.amount }
+    val totalExpenses = expenses.sumOf { it.amount }
+    val balance = totalIncome - totalExpenses
+    val today = LocalDate.now()
+    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    val formattedDate = today.format(formatter)
 
-fun exit() {}
+    println("-------------------------------------")
+    println("|      Your Financial Report        |")
+    println("-------------------------------------")
+    println("|Report Generated on: $formattedDate    |")
+    println("-------------------------------------")
+    println("|Total Income: $totalIncome             |")
+    println("|Total Expenses: $totalExpenses         |")
+    println("-------------------------------------")
+    println("|Total Balance: €$balance               |")
+    println("-------------------------------------")
+
+}
+
+fun exit() {
+    println("Thank you, Bye Now!")
+    exitProcess(0)
+}
 
