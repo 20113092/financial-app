@@ -12,7 +12,8 @@ fun main() {
 
 fun mainMenu(): Int {
     while (true) {
-    print("""
+        print(
+            """
           ----------------------------------
           |         Financial App          |
           ----------------------------------
@@ -24,24 +25,26 @@ fun mainMenu(): Int {
           |   5) Get A Financial Report    |  
           |   6) Exit                      |  
           ----------------------------------
-         >""".trimMargin(">"))
+         >""".trimMargin(">")
+        )
         return readlnOrNull()?.toIntOrNull() ?: -1
     }
 }
-        fun runMenu() {
-            do {
-                val option = mainMenu()
-                when (option) {
-                    1 -> addIncome()
-                    2 -> addExpense()
-                    3 -> listIncomes()
-                    4 -> listExpenses()
-                    5 -> report()
-                    6 -> exit()
-                    else -> println("Invalid option, Chose again")
-                }
-            } while (true)
+
+fun runMenu() {
+    do {
+        val option = mainMenu()
+        when (option) {
+            1 -> addIncome()
+            2 -> addExpense()
+            3 -> listIncomes()
+            4 -> listExpenses()
+            5 -> report()
+            6 -> exit()
+            else -> println("Invalid option, Chose again")
         }
+    } while (true)
+}
 
 
 fun addIncome() {
@@ -116,10 +119,27 @@ fun listExpenses() {
     }
 }
 
+
 fun report() {
-    val totalIncome = incomes.sumOf { it.amount }
-    val totalExpenses = expenses.sumOf { it.amount }
-    val balance = totalIncome - totalExpenses
+    println("-------------------------------------")
+    println("|      Your Financial Report        |")
+    println("-------------------------------------")
+    println("| 1. Report on All Records.         |")
+    println("| 2. Report with a Date Range.      |")
+    println("-------------------------------------")
+
+    when (readln().toInt()) {
+        1 -> fullReport()
+        2 -> dateRangeReport()
+        else -> println("Invalid option.")
+    }
+}
+
+fun fullReport() {
+    val totalIncome = getTotalIncome()
+    val totalExpenses = getTotalExpenses()
+    val balance = getBalance()
+
     val today = LocalDate.now()
     val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
     val formattedDate = today.format(formatter)
@@ -127,15 +147,40 @@ fun report() {
     println("-------------------------------------")
     println("|      Your Financial Report        |")
     println("-------------------------------------")
-    println("|Report Generated on: $formattedDate    |")
+    println("| Report Generated on: $formattedDate |")
     println("-------------------------------------")
-    println("|Total Income: $totalIncome             |")
-    println("|Total Expenses: $totalExpenses         |")
+    println("| Total Income: €$totalIncome        |")
+    println("| Total Expenses: €$totalExpenses    |")
     println("-------------------------------------")
-    println("|Total Balance: €$balance               |")
+    println("| Total Balance: €$balance           |")
     println("-------------------------------------")
-
 }
+
+fun dateRangeReport() {
+    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+
+    print("Enter START date (DD-MM-YYYY): ")
+    val startDate = LocalDate.parse(readln(), formatter)
+
+    print("Enter END date (DD-MM-YYYY): ")
+    val endDate = LocalDate.parse(readln(), formatter)
+
+    val totalIncome = getIncomeByDateRange(startDate, endDate)
+    val totalExpenses = getExpensesByDateRange(startDate, endDate)
+    val balance = totalIncome - totalExpenses
+
+    println("-------------------------------------")
+    println("|   Financial Report By Date Range  |")
+    println("-------------------------------------")
+    println("| From: $startDate  To: $endDate    |")
+    println("-------------------------------------")
+    println("| Total Income: €$totalIncome       |")
+    println("| Total Expenses: €$totalExpenses   |")
+    println("-------------------------------------")
+    println("| Total Balance: €$balance          |")
+    println("-------------------------------------")
+}
+
 
 fun exit() {
     println("Thank you, Bye Now!")

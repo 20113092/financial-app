@@ -1,13 +1,15 @@
 package ie.setu.utils
 
-fun getTotalIncome(): Double {
-    return incomes.sumOf { it.amount}
-}
+import java.time.LocalDate
 
-fun getTotalExpenses(): Double {
-    return expenses.sumOf { it.amount}
-}
+fun getTotalIncome(): Double = incomes.sumOf { it.amount }
 
-fun getBalance(): Double {
-    return getTotalIncome() - getTotalExpenses()
-}
+fun getTotalExpenses(): Double = expenses.sumOf { it.amount }
+
+fun getBalance(): Double = getTotalIncome() - getTotalExpenses()
+
+fun getIncomeByDateRange(start: LocalDate, end: LocalDate): Double =
+    incomes.filter { it.date in start..end }.sumOf { it.amount }
+
+fun getExpensesByDateRange(start: LocalDate, end: LocalDate): Double =
+    expenses.filter { it.date in start..end }.sumOf { it.amount }
