@@ -1,23 +1,24 @@
 package ie.setu
 
+import ie.setu.controllers.FinanceAPI
 import ie.setu.models.*
 import ie.setu.utils.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.system.exitProcess
 
+private val api = FinanceAPI()
+private val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+
 fun main() {
     runMenu()
 }
 
 fun mainMenu(): Int {
-    while (true) {
-        print(
-            """
+    print("""
           ----------------------------------
           |         Financial App          |
           ----------------------------------
-          | NOTE MENU                      |
           |   1) Add your Income           |
           |   2) Add your Expenses         |
           |   3) List All Incomes          |
@@ -25,96 +26,86 @@ fun mainMenu(): Int {
           |   5) Get A Financial Report    |  
           |   6) Exit                      |  
           ----------------------------------
-         >""".trimMargin(">")
-        )
-        return readlnOrNull()?.toIntOrNull() ?: -1
-    }
+         > """.trimIndent())
+
+    return readlnOrNull()?.toIntOrNull() ?: -1
 }
 
 fun runMenu() {
-    do {
-        val option = mainMenu()
-        when (option) {
+    while (true) {
+        when (mainMenu()) {
             1 -> addIncome()
             2 -> addExpense()
             3 -> listIncomes()
             4 -> listExpenses()
             5 -> report()
             6 -> exit()
-            else -> println("Invalid option, Chose again")
+            else -> println("Invalid option, choose again")
         }
-    } while (true)
+    }
 }
-
 
 fun addIncome() {
-    print("Description: ");
+    print("Description: ")
     val description = readln()
 
-    print("Category: ");
+    print("Category: ")
     val category = readln()
 
-    print("Date (DD-MM-YYYY): ");
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    print("Date (DD-MM-YYYY): ")
     val date = LocalDate.parse(readln(), formatter)
 
-    print("Amount: ");
+    print("Amount: ")
     val amount = readln().toDouble()
 
-    print("Transferred: (True/False): ");
+    print("Transferred (true/false): ")
     val transferred = readln().toBoolean()
 
-    addIncome(Income(description, category, date, amount, transferred))
-    println("Income complete.")
+    api.addIncome(Income(description, category, date, amount, transferred))
+    println("Income Added.")
 }
 
+
 fun addExpense() {
-    print("Description: ");
+    print("Description: ")
     val description = readln()
 
-    print("Category: ");
+    print("Category: ")
     val category = readln()
 
-    print("Recipient: ");
+    print("Recipient: ")
     val recipient = readln()
 
-    print("Date (DD-MM-YYYY): ");
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    print("Date (DD-MM-YYYY): ")
     val date = LocalDate.parse(readln(), formatter)
 
-    print("Amount: ");
+    print("Amount: ")
     val amount = readln().toDouble()
 
-    print("Transferred: (True/False): ");
+    print("Transferred (true/false): ")
     val transferred = readln().toBoolean()
 
-    addExpense(Expense(description, category, recipient, date, amount, transferred))
+    api.addExpense(Expense(description, category, recipient, date, amount, transferred))
     println("Expense Added.")
 }
 
 
 fun listIncomes() {
+    val incomes = api.getAllIncomes()
+
     if (incomes.isEmpty()) {
         println("No Incomes on Record.")
     } else {
-
-        println("----------------------------------")
-        println("|   All Your Recorded Incomes.   |")
-        println("----------------------------------")
-
         incomes.forEach { println(it) }
     }
 }
 
 fun listExpenses() {
+    val expenses = api.getAllExpenses()
+
     if (expenses.isEmpty()) {
         println("No Expenses on Record.")
     } else {
-
-        println("----------------------------------")
-        println("|   All Your Recorded Expenses.  |")
-        println("----------------------------------")
-
         expenses.forEach { println(it) }
     }
 }
@@ -136,54 +127,38 @@ fun report() {
 }
 
 fun fullReport() {
-    val totalIncome = getTotalIncome()
-    val totalExpenses = getTotalExpenses()
-    val balance = getBalance()
-
-    val today = LocalDate.now()
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-    val formattedDate = today.format(formatter)
+    val totalIncome = getTotalIncome(api)
+    val totalExpenses = getTotalExpenses(api)
+    val balance = getBalance(api)
 
     println("-------------------------------------")
-    println("|      Your Financial Report        |")
-    println("-------------------------------------")
-    println("| Report Generated on: $formattedDate |")
-    println("-------------------------------------")
-    println("| Total Income: €$totalIncome        |")
-    println("| Total Expenses: €$totalExpenses    |")
-    println("-------------------------------------")
-    println("| Total Balance: €$balance           |")
+    println("| Total Income: €$totalIncome       |")
+    println("| Total Expenses: €$totalExpenses  |")
+    println("| Total Balance: €$balance         |")
     println("-------------------------------------")
 }
 
 fun dateRangeReport() {
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-
     print("Enter START date (DD-MM-YYYY): ")
     val startDate = LocalDate.parse(readln(), formatter)
 
     print("Enter END date (DD-MM-YYYY): ")
     val endDate = LocalDate.parse(readln(), formatter)
 
-    val totalIncome = getIncomeByDateRange(startDate, endDate)
-    val totalExpenses = getExpensesByDateRange(startDate, endDate)
+    val totalIncome = getIncomeByDateRange(api, startDate, endDate)
+    val totalExpenses = getExpensesByDateRange(api, startDate, endDate)
     val balance = totalIncome - totalExpenses
 
     println("-------------------------------------")
     println("|   Financial Report By Date Range  |")
     println("-------------------------------------")
-    println("| From: $startDate  To: $endDate    |")
-    println("-------------------------------------")
     println("| Total Income: €$totalIncome       |")
-    println("| Total Expenses: €$totalExpenses   |")
-    println("-------------------------------------")
-    println("| Total Balance: €$balance          |")
+    println("| Total Expenses: €$totalExpenses  |")
+    println("| Total Balance: €$balance         |")
     println("-------------------------------------")
 }
-
 
 fun exit() {
     println("Thank you, Bye Now!")
     exitProcess(0)
 }
-
